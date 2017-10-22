@@ -2,6 +2,73 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
+import pickle
+import cv2
+import os
+import numpy as np
+import math
+import utils as aux
+
+
+class Processing:
+
+    def __init__(self):
+        calibrationFile = 'calibration_data.p'
+
+        if not os.path.isfile(calibrationFile):
+            self.camMtx = None
+            self.distortionCoeffs = None
+        else:
+            with open(calibrationFile, mode='rb') as f:
+                data = pickle.load(f)
+
+            self.camMtx = data['cameraMatrix']
+            self.distortionCoeffs = data['distCoeffs']
+
+    def undistort(self, src):
+        """
+        Distortion correction using available camera matrix and distortion coefficients
+        :param src: source image captured with the same camera as available matrix and distortion
+        coefficients for
+        :return: image with corrected distortion
+        """
+        if self.camMtx is not None and self.distortionCoeffs is not None:
+
+            return cv2.undistort(src, self.camMtx, self.distortionCoeffs, None, self.camMtx)
+        else:
+            return None
+
+    @staticmethod
+    def histEq(src):
+        """
+        Histogram equalization
+        :param src: gray or rgb image. The latter to be converted to HLS and histogram
+        equalization applied to Luminance space, then converted back to RGB
+        :return: histogram-equalized image
+        """
+
+        if len(src.shape) > 2:
+
+            src = Thresholding.hls(src)
+
+            src[:, :, 1] = cv2.equalizeHist(src[:, :, 1])
+
+            return cv2.cvtColor(src, cv2.COLOR_HLS2RGB)
+
+        else:
+            return cv2.equalizeHist(src)
+
+    @staticmethod
+    def resize(src, ratio, interpolation=cv2.INTER_AREA):
+        """
+        Convenience wrapper for OpenCV resize function
+        :param src: 
+        :param ratio: 
+        :param interpolation: 
+        :return: 
+        """
+        return cv2.resize(src=src, dsize=(0, 0), fx=ratio, fy=ratio, interpolation=interpolation)
+
 
 # Prompt for limited number of options
 def promptForInputCategorical(message, options):
