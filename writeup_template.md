@@ -16,8 +16,8 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 [image1]: ./output_images/dataset.png
-[image2]: ./output_images/HOG_Features.jpg
-[image3]: ./output_images/Boxes_1.jpg
+[image2]: ./output_images/HOG_Features.png
+[image3]: ./output_images/Boxes_1.png
 [image4]: ./output_images/Search_Area_1.jpg
 [image5]: ./output_images/Search_Area_2.png
 [image6]: ./output_images/Search_Area_3.png
